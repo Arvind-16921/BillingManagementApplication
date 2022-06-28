@@ -126,6 +126,13 @@ public class Home extends JFrame {
 		contentPane.add(btnNewButton_2);
 		
 		btnNewButton_3 = new JButton("Buyer Details");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Buyer b = new Buyer();
+				b.cl.show(b.panel, "panel_3");
+				b.setVisible(true);
+			}
+		});
 		btnNewButton_3.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -143,6 +150,13 @@ public class Home extends JFrame {
 		contentPane.add(btnNewButton_3);
 		
 		btnNewButton_4 = new JButton("Delete Buyer");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Buyer b = new Buyer();
+				b.cl.show(b.panel, "panel_4");
+				b.setVisible(true);
+			}
+		});
 		btnNewButton_4.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -154,21 +168,49 @@ public class Home extends JFrame {
 		contentPane.add(btnNewButton_4);
 		
 		btnNewButton_5 = new JButton("New Product");
+		btnNewButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Product product = new Product();
+				product.cl.show(product.panel, "panel_1");
+				product.setVisible(true);
+			}
+		});
 		btnNewButton_5.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnNewButton_5.setBounds(237, 166, 244, 44);
 		contentPane.add(btnNewButton_5);
 		
 		btnNewButton_6 = new JButton("Update Product");
+		btnNewButton_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Product product = new Product();
+				product.cl.show(product.panel, "panel_2");
+				product.setVisible(true);
+			}
+		});
 		btnNewButton_6.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnNewButton_6.setBounds(529, 166, 290, 44);
 		contentPane.add(btnNewButton_6);
 		
 		btnNewButton_7 = new JButton("Product Details");
+		btnNewButton_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Product product = new Product();
+				product.cl.show(product.panel, "panel_3");
+				product.setVisible(true);
+			}
+		});
 		btnNewButton_7.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnNewButton_7.setBounds(860, 166, 288, 44);
 		contentPane.add(btnNewButton_7);
 		
 		btnNewButton_8 = new JButton("Delete Product");
+		btnNewButton_8.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Product product = new Product();
+				product.cl.show(product.panel, "panel_4");
+				product.setVisible(true);
+			}
+		});
 		btnNewButton_8.setFont(new Font("Tahoma", Font.BOLD, 30));
 		btnNewButton_8.setBounds(1190, 166, 310, 44);
 		contentPane.add(btnNewButton_8);
@@ -196,9 +238,14 @@ public class Home extends JFrame {
 		btnNewButton_10.setBounds(1268, 716, 232, 44);
 		contentPane.add(btnNewButton_10);
 		
-		JButton btnNewButton_11 = new JButton("Billing");
+		JButton btnNewButton_11 = new JButton("Generate Bill");
+		btnNewButton_11.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new GenerateBill().setVisible(true);
+			}
+		});
 		btnNewButton_11.setFont(new Font("Tahoma", Font.BOLD, 80));
-		btnNewButton_11.setBounds(579, 338, 452, 210);
+		btnNewButton_11.setBounds(481, 339, 556, 210);
 		contentPane.add(btnNewButton_11);
 		
 		btnNewButton_1.setVisible(false);

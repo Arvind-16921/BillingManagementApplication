@@ -17,14 +17,19 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import dao.ConnectionProvider;
 
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class Product extends JFrame {
 
@@ -43,10 +48,12 @@ public class Product extends JFrame {
 	private JTextField textField_10;
 	private JTextField textField_11;
 	private JTextField textField_12;
-	private CardLayout cl;
+	public CardLayout cl;
 	private Connection cn;
 	private Statement st;
 	private ResultSet rs;
+	public JPanel panel, panel_1,panel_2,panel_3,panel_4;
+	private JLabel lblNewLabel_1_1;
 	/**
 	 * Launch the application.
 	 */
@@ -82,14 +89,15 @@ public class Product extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
 		cl = new CardLayout();
 		panel.setLayout(cl);
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
+		
 		panel_1.setBackground(Color.CYAN);
-		panel.add(panel_1, "name_1301435476033400");
+		panel.add(panel_1, "panel_1");
 		panel_1.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("New Product");
@@ -106,11 +114,29 @@ public class Product extends JFrame {
 		lblNewLabel_1.setBounds(551, 159, 116, 39);
 		panel_1.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Ids");
+		lblNewLabel_1_1 = new JLabel("Ids");
 		lblNewLabel_1_1.setForeground(Color.RED);
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblNewLabel_1_1.setBounds(677, 159, 116, 39);
 		panel_1.add(lblNewLabel_1_1);
+		
+//		panel_1.addComponentListener(new ComponentAdapter() {
+//			@Override
+//			public void componentShown(ComponentEvent e) {
+				try {
+					rs = st.executeQuery("select max(productId) from product");
+					if(rs.next()) {
+						int id = rs.getInt(1);
+						lblNewLabel_1_1.setText(++id+"");
+//						JOptionPane.showMessageDialog(null, id);
+					}
+					else
+						lblNewLabel_1_1.setText(1+"");
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+//			}
+//		});
 		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(35, 225, 1434, 422);
@@ -155,6 +181,8 @@ public class Product extends JFrame {
 		panel_1.add(textField_2);
 		
 		JComboBox comboBox = new JComboBox();
+		comboBox.setFont(new Font("Tahoma", Font.BOLD, 16));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Yes", "No"}));
 		comboBox.setBounds(648, 491, 308, 39);
 		panel_1.add(comboBox);
 		
@@ -163,6 +191,22 @@ public class Product extends JFrame {
 		panel_1.add(separator_2);
 		
 		JButton btnNewButton = new JButton("Save");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					int pId = Integer.parseInt(lblNewLabel_1_1.getText());
+					String name = textField.getText();
+					String rate = textField_1.getText();
+					String description = textField_2.getText();
+					String activate = (String) comboBox.getSelectedItem();
+					st.executeUpdate("insert into product values("+pId+",'"+name+"','"+rate+"','"+description+"','"+activate+"')");
+					JOptionPane.showMessageDialog(null, "Record inserted");
+				}
+				catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+			}
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton.setBounds(35, 712, 145, 33);
 		panel_1.add(btnNewButton);
@@ -177,16 +221,16 @@ public class Product extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",JOptionPane.YES_NO_OPTION );
 				if(i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_2.setBounds(1324, 712, 145, 33);
 		panel_1.add(btnNewButton_2);
 		
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		panel_2.setBackground(Color.CYAN);
-		panel.add(panel_2, "name_1301442624207900");
+		panel.add(panel_2, "panel_2");
 		panel_2.setLayout(null);
 		
 		JLabel lblNewLabel_3 = new JLabel("Update Product");
@@ -281,16 +325,16 @@ public class Product extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",JOptionPane.YES_NO_OPTION );
 				if(i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_3_3.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_3_3.setBounds(1322, 725, 151, 36);
 		panel_2.add(btnNewButton_3_3);
 		
-		JPanel panel_3 = new JPanel();
+		panel_3 = new JPanel();
 		panel_3.setBackground(Color.CYAN);
-		panel.add(panel_3, "name_1301444955555500");
+		panel.add(panel_3, "panel_3");
 		panel_3.setLayout(null);
 		
 		JLabel lblNewLabel_5 = new JLabel("Product Details");
@@ -325,6 +369,8 @@ public class Product extends JFrame {
 				return columnTypes[columnIndex];
 			}
 		});
+		JTableHeader tableHeader = table.getTableHeader();
+		tableHeader.setFont(new Font("Tahoma",Font.BOLD,16));
 		scrollPane.setViewportView(table);
 		
 		JButton btnNewButton_4 = new JButton("Print");
@@ -337,16 +383,16 @@ public class Product extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",JOptionPane.YES_NO_OPTION );
 				if(i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_4_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_4_1.setBounds(1295, 731, 189, 35);
 		panel_3.add(btnNewButton_4_1);
 		
-		JPanel panel_4 = new JPanel();
+		panel_4 = new JPanel();
 		panel_4.setBackground(Color.CYAN);
-		panel.add(panel_4, "name_1301451445076400");
+		panel.add(panel_4, "panel_4");
 		panel_4.setLayout(null);
 		
 		JLabel lblNewLabel_3_1 = new JLabel("Delete Product");
@@ -441,7 +487,7 @@ public class Product extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",JOptionPane.YES_NO_OPTION );
 				if(i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_3_3_1.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -449,3 +495,6 @@ public class Product extends JFrame {
 		panel_4.add(btnNewButton_3_3_1);
 	}
 }
+/*
+ create table product (productId Integer primary key, name varchar(30), rate varchar(30), description varchar(100), activate varchar(10));
+ */

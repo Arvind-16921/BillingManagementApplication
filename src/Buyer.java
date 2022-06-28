@@ -12,12 +12,15 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import dao.ConnectionProvider;
 
@@ -26,6 +29,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.print.PrinterException;
 
 public class Buyer extends JFrame {
 
@@ -124,35 +131,66 @@ public class Buyer extends JFrame {
 		panel_1.add(lblNewLabel_5);
 		
 		textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textField.setBounds(605, 239, 440, 35);
 		panel_1.add(textField);
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
+		textField_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textField_1.setColumns(10);
 		textField_1.setBounds(605, 318, 440, 35);
 		panel_1.add(textField_1);
 		
 		textField_2 = new JTextField();
+		textField_2.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textField_2.setColumns(10);
 		textField_2.setBounds(605, 408, 440, 35);
 		panel_1.add(textField_2);
 		
 		textField_3 = new JTextField();
+		textField_3.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textField_3.setColumns(10);
 		textField_3.setBounds(605, 485, 440, 35);
 		panel_1.add(textField_3);
 		
 		JComboBox comboBox = new JComboBox();
+		comboBox.setFont(new Font("Tahoma", Font.BOLD, 16));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Male", "Female", "Other"}));
 		comboBox.setBounds(605, 570, 440, 35);
 		panel_1.add(comboBox);
 		
 		JButton btnNewButton = new JButton("Save");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String name = textField.getText();
+					String contactNo = textField_1.getText();
+					String emailId = textField_2.getText();
+					String address = textField_3.getText();
+					String gender = (String)comboBox.getSelectedItem();
+					st.executeUpdate("insert into buyer values ('"+name+"','"+contactNo+"','"+emailId+"','"+address+"','"+gender+"')");
+					JOptionPane.showMessageDialog(null, "Submitted successfully");
+				}
+				catch(Exception e1) {
+					JOptionPane.showMessageDialog(null,e1);
+				}
+			}
+		});
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton.setBounds(50, 714, 171, 35);
 		panel_1.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Reset");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textField.setText("");
+				textField_1.setText("");
+				textField_2.setText("");
+				textField_3.setText("");
+				comboBox.setSelectedIndex(0);
+			}
+		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_1.setBounds(699, 714, 171, 35);
 		panel_1.add(btnNewButton_1);
@@ -162,7 +200,7 @@ public class Buyer extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",JOptionPane.YES_NO_OPTION );
 				if(i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_1_1.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -254,6 +292,7 @@ public class Buyer extends JFrame {
 		panel_2.add(textField_7);
 		
 		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Male", "Female", "Other"}));
 		comboBox_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		comboBox_1.setBounds(636, 576, 363, 36);
 		panel_2.add(comboBox_1);
@@ -265,16 +304,69 @@ public class Buyer extends JFrame {
 		textField_8.setColumns(10);
 		
 		JButton btnNewButton_2 = new JButton("Search");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String contactNo = textField_8.getText();
+					rs = st.executeQuery("select *from buyer where contactNo='"+contactNo+"'");
+					if(rs.next()) {
+						textField_4.setText(rs.getString(1));
+						textField_5.setText(rs.getString(2));
+						textField_6.setText(rs.getString(3));
+						textField_7.setText(rs.getString(4));
+						comboBox_1.setSelectedItem(rs.getString(5));
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Data not available");
+					}
+				}
+				catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+			}
+			
+		});
 		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_2.setBounds(901, 204, 194, 34);
 		panel_2.add(btnNewButton_2);
 		
 		JButton btnNewButton_3 = new JButton("Save");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String name = textField_4.getText();
+					String contactNo = textField_5.getText();
+					String emailId = textField_6.getText();
+					String address = textField_7.getText();
+					String gender = (String)comboBox_1.getSelectedItem();
+					st.executeUpdate("update buyer set name='"+name+"', contactNo='"+contactNo+"', emailId='"+emailId+"', address='"+address+"', gender='"+gender+"'");
+					JOptionPane.showMessageDialog(null, "Record updated");
+					textField_4.setText("");
+					textField_5.setText("");
+					textField_6.setText("");
+					textField_7.setText("");
+					comboBox_1.setSelectedIndex(0);
+				}
+				catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+			}
+		});
 		btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_3.setBounds(34, 699, 184, 36);
 		panel_2.add(btnNewButton_3);
 		
 		JButton btnNewButton_3_1 = new JButton("Reset");
+		btnNewButton_3_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textField_8.setText("");
+				textField_4.setText("");
+				textField_5.setText("");
+				textField_6.setText("");
+				textField_7.setText("");
+				comboBox_1.setSelectedIndex(0);
+			}
+		});
 		btnNewButton_3_1.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_3_1.setBounds(679, 699, 184, 36);
 		panel_2.add(btnNewButton_3_1);
@@ -284,7 +376,7 @@ public class Buyer extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",JOptionPane.YES_NO_OPTION );
 				if(i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_3_1_1.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -292,6 +384,21 @@ public class Buyer extends JFrame {
 		panel_2.add(btnNewButton_3_1_1);
 		
 		panel_3 = new JPanel();
+		panel_3.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				try {
+					rs = st.executeQuery("select *from buyer");
+					DefaultTableModel tableModel = (DefaultTableModel)table.getModel(); 
+					while(rs.next()) {
+						tableModel.addRow(new String[] {rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5)});
+					}
+				}
+				catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+			}
+		});
 		panel_3.setBackground(Color.CYAN);
 		panel.add(panel_3, "panel_3");
 		panel_3.setLayout(null);
@@ -332,13 +439,20 @@ public class Buyer extends JFrame {
 			}
 		});
 		scrollPane.setViewportView(table);
+		JTableHeader tableHeader = table.getTableHeader();
+		tableHeader.setFont(new Font("Tahoma", Font.BOLD, 16));
+		
+		DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tableHeader.getDefaultRenderer();
+		renderer.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		table.setShowGrid(false);
 		
 		JButton btnNewButton_4 = new JButton("Close");
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",JOptionPane.YES_NO_OPTION );
 				if(i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_4.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -350,6 +464,15 @@ public class Buyer extends JFrame {
 		panel_3.add(separator_6);
 		
 		JButton btnNewButton_7 = new JButton("Print");
+		btnNewButton_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					table.print(JTable.PrintMode.FIT_WIDTH);
+				} catch (PrinterException e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+			}
+		});
 		btnNewButton_7.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_7.setBounds(40, 727, 156, 37);
 		panel_3.add(btnNewButton_7);
@@ -380,6 +503,27 @@ public class Buyer extends JFrame {
 		textField_9.setColumns(10);
 		
 		JButton btnNewButton_5 = new JButton("Search");
+		btnNewButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String contactNo = textField_9.getText();
+					rs = st.executeQuery("select *from buyer where contactNo='"+contactNo+"'");
+					if(rs.next())
+					{
+						textField_10.setText(rs.getString(1));
+						textField_11.setText(rs.getString(2));
+						textField_12.setText(rs.getString(3));
+						textField_13.setText(rs.getString(4));
+						textField_14.setText(rs.getString(5));
+					}
+					else
+						JOptionPane.showMessageDialog(null,"No such record");
+				}
+				catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+			}
+		});
 		btnNewButton_5.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_5.setBounds(966, 165, 180, 38);
 		panel_4.add(btnNewButton_5);
@@ -448,6 +592,18 @@ public class Buyer extends JFrame {
 		panel_4.add(separator_9);
 		
 		JButton btnNewButton_6 = new JButton("Delete");
+		btnNewButton_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String contactNo = textField_9.getText();
+					st.executeUpdate("delete from buyer where contactNo='"+contactNo+"'");
+					JOptionPane.showMessageDialog(null, "Record deleted");
+				}
+				catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+			}
+		});
 		btnNewButton_6.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnNewButton_6.setBounds(26, 641, 155, 32);
 		panel_4.add(btnNewButton_6);
@@ -462,7 +618,7 @@ public class Buyer extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",JOptionPane.YES_NO_OPTION );
 				if(i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_6_1_1.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -470,3 +626,5 @@ public class Buyer extends JFrame {
 		panel_4.add(btnNewButton_6_1_1);
 	}
 }
+
+//create table buyer (name varchar(30), contactNo varchar(10), emailId varchar(30), address varchar(200), gender varchar(10));

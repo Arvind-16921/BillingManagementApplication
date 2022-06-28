@@ -294,7 +294,7 @@ public class GenerateBill extends JFrame {
 				int i = JOptionPane.showConfirmDialog(null, "Do you really want to close", "select",
 						JOptionPane.YES_NO_OPTION);
 				if (i == 0)
-					System.exit(0);
+					dispose();
 			}
 		});
 		btnNewButton_1_2.setFont(new Font("Tahoma", Font.BOLD, 16));
